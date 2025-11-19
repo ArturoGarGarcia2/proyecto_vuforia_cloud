@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.2.6f1
+CRC: 2966652421
+HashAppended: 0
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: ardebugmenu
+      Dependencies: {}
+    Info_1:
+      Name: cube
+      Dependencies: {}
+    Info_2:
+      Name: sphere
+      Dependencies: {}
+    Info_3:
+      Name: afrodita
+      Dependencies: {}
+    Info_4:
+      Name: key
+      Dependencies: {}
