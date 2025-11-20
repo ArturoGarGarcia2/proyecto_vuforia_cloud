@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.2.6f1
+CRC: 1620558331
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 72e4ba3e8a40443dc82b1c4a9544afb1
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 756c782b9b6ee152b0d33e7b9fa049d2
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: ce7e1d6b24d3620f2d1a0001c242b96d
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Mapa.prefab
+Dependencies: []

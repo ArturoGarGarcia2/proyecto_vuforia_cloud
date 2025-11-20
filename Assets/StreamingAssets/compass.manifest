@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.2.6f1
+CRC: 161524239
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 3438743600f91df819056cfd11d92a0a
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 756c782b9b6ee152b0d33e7b9fa049d2
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 8cd8e722d40be97442a9bcb7a4d2caf5
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Brujula.prefab
+Dependencies: []

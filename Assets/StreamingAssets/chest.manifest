@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.2.6f1
+CRC: 2116710937
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: eeecec1b35b62ebc665e9c35557f4c98
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: e07588d0b731870cadd98ec962e98a03
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 62ed8d11cb4d88d8207f0e0f19d95327
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Cofre.prefab
+Dependencies: []

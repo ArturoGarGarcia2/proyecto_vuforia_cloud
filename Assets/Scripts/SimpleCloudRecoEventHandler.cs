@@ -144,16 +144,16 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
         style.alignment = TextAnchor.MiddleCenter;
         style.fontSize = 40;
         // Display current 'scanning' status
-        GUI.Box(new Rect(100, 100, 600, 100), mIsScanning ? "Scanning" : "Not scanning", style);
+        GUI.Box(new Rect(100, 100, 600, 100), mIsScanning ? "Scanning" : "Not scanning");
         // Display metadata of latest detected cloud-target
-        GUI.Box(new Rect(100, 300, 600, 100), "Metadata: " + datos.nombre != null ? datos.nombre : "", style);
+        GUI.Box(new Rect(100, 300, 600, 100), "Metadata: " + datos.nombre != null ? datos.nombre : "");
         // GUI.Box(new Rect(100, 400, 200, 100), "Busca: " + target);
-        // GUI.Box(new Rect(100, 700, 600, 100), "" + debug);
+        GUI.Box(new Rect(100, 700, 600, 100), "" + debug);
         // If not scanning, show button
         // so that user can restart cloud scanning
         if (!mIsScanning)
         {
-            if (GUI.Button(new Rect(100, 500, 600, 100), "Restart Scanning", style))
+            if (GUI.Button(new Rect(100, 500, 600, 100), "Restart Scanning"))
             {
                 // Reset Behaviour
                 mCloudRecoBehaviour.enabled = true;
