@@ -87,7 +87,7 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
         }
     }
 
-    string debug = "";
+    string debug = "DEBUG";
     private GameObject currentInstance;
     private AssetBundle currentBundle;
 
@@ -164,19 +164,25 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
         datos = MetaDatos.CreateFromJSON(cloudRecoSearchResult.MetaData);
         if (!GameController.controller.IsScanned(datos.nombre))
         {
+            debug = "No está escaneado";
             if (datos != null)
             {
+                debug += "\nHay datillos";
                 // debug = datos.nombre+": Descargando figura desde URL...";
                 StartCoroutine(GetAssetBundle(datos.URL));
 
                 mTargetMetadata = datos.nombre;
-                  GameController.controller.Scan(datos.nombre);
+                GameController.controller.Scan(datos.nombre);
             }
             else
             {
                 debug = "Metadatos vacíos";
             }
 
+        }
+        else
+        {
+            debug = "Wscaneau";
         }
         mCloudRecoBehaviour.enabled = false;
 

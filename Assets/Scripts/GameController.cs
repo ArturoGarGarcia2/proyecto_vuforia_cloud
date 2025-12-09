@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI txtHint3;
     public TextMeshProUGUI txtHint4;
     public TextMeshProUGUI txtFinalHint;
+    public TextMeshProUGUI txtDebug;
 
     Dictionary <string, bool> targetsScanned = new Dictionary<string, bool>();
     string[] keys =
@@ -69,20 +70,22 @@ public class GameController : MonoBehaviour
 
     public bool IsScanned(string key)
     {
+        txtDebug.text = "Viendo a ver si algo cambia";
         return targetsScanned[key];
     }
 
     public void Scan(string key)
     {
-        targetsScanned[key] = true;
+        key = key.Trim().ToLower();
+        txtDebug.text = keys.Length+"";
 
         for (int i = 0; i < keys.Length; i++)
         {
-            string k = keys[i];
-            if (targetsScanned[k])
+            // txtDebug.text = txtDebug.text+keys[i]+"\n";
+            if (keys[i].ToLower() == key)
             {
-                // txtHints[i].text = "<s>" + originalHints[i] + "</s>";
-                txtHints[i].text = "AAAAAAAAAAAAAAAAAAAAAAAAA";
+                targetsScanned[keys[i]] = true;
+                txtHints[i].text = "<s>" + originalHints[i] + "</s>";
             }
         }
     }
