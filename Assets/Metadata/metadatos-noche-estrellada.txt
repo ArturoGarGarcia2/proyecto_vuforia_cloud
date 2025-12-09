@@ -1,0 +1,4 @@
+{
+	"nombre": "Brújula Noche Estrellada",
+	"URL": "https://drive.google.com/uc?export=download&id=1o2o43bOvF4Ve0uP8e5FMYY9pVONU_xl1"
+}
