@@ -32,6 +32,8 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
     public GameObject[] gameObjects;
 
     public ImageTargetBehaviour ImageTargetTemplate;
+    public Transform modelPivot;
+
 
     private void generarNuevoTarget()
     {
@@ -81,68 +83,113 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
 
         if (scanning)
         {
-            // Clear all known targets
+            ClearSpawnedObjects();
         }
     }
 
     string debug = "";
+    private GameObject currentInstance;
+    private AssetBundle currentBundle;
 
-    IEnumerator GetAssetBundle(string url) {
+
+    // IEnumerator GetAssetBundle(string url)
+    // {
+    //     UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(url);
+    //     yield return www.SendWebRequest();
+
+    //     if (www.result != UnityWebRequest.Result.Success)
+    //     {
+    //         Debug.Log(www.error);
+    //         debug = "" + www + "\ne: " + www.error;
+    //     }
+    //     else
+    //     {
+    //         currentBundle = DownloadHandlerAssetBundle.GetContent(www);
+
+    //         string[] allAssetNames = currentBundle.GetAllAssetNames();
+    //         string gameObjectName = Path.GetFileNameWithoutExtension(allAssetNames[0]).ToString();
+    //         GameObject objectFound = currentBundle.LoadAsset<GameObject>(gameObjectName);
+
+    //         currentInstance = Instantiate(objectFound, transform.position, transform.rotation);
+    //         debug = "Descargado";
+    //     }
+
+    //     debug += "\n" + url;
+    // }
+
+    IEnumerator GetAssetBundle(string url)
+    {
         UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(url);
         yield return www.SendWebRequest();
- 
-        if (www.result != UnityWebRequest.Result.Success) {
-            Debug.Log(www.error);
-            debug = ""+www;
-            debug += "\ne: "+www.error;
-        }
-        else {
-            AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(www);
-            string[] allAssetNames = bundle.GetAllAssetNames();
-            string gameObjectName = Path.GetFileNameWithoutExtension(allAssetNames[0]).ToString();
-            GameObject objectFound = bundle.LoadAsset(gameObjectName) as GameObject;
-            Instantiate(objectFound,transform.position, transform.rotation);
-            debug = "Descargado";
-        }
-        debug += "\n"+url;
-    }
 
-    MetaDatos datos;
-    // Here we handle a cloud target recognition event
-    public void OnNewSearchResult(CloudRecoBehaviour.CloudRecoSearchResult cloudRecoSearchResult)
-    {
-        // Convertir metadatos JSON en objeto
-        datos = MetaDatos.CreateFromJSON(cloudRecoSearchResult.MetaData);
-
-        if (datos != null)
+        if (www.result != UnityWebRequest.Result.Success)
         {
-            debug = datos.nombre+"Descargando figura desde URL...";
-            StartCoroutine(GetAssetBundle(datos.URL));
-
-            // Guardar nombre real del target desde JSON
-            mTargetMetadata = datos.nombre;
+            Debug.Log(www.error);
         }
         else
         {
-            debug = "Metadatos vacíos";
+            currentBundle = DownloadHandlerAssetBundle.GetContent(www);
+            string[] allAssetNames = currentBundle.GetAllAssetNames();
+            string gameObjectName = Path.GetFileNameWithoutExtension(allAssetNames[0]);
+
+            GameObject objectFound = currentBundle.LoadAsset<GameObject>(gameObjectName);
+
+            // Instanciar correctamente en el pivot
+            currentInstance = Instantiate(objectFound, modelPivot);
+
+            // Ajustes locales
+            currentInstance.transform.localPosition = new Vector3(0.05f, 0f, 0.05f);
+            currentInstance.transform.localRotation = Quaternion.Euler(0f, 0f, -180f);
+        }
+    }
+
+    private void ClearSpawnedObjects()
+    {
+        if (currentInstance != null)
+        {
+            Destroy(currentInstance);
+            currentInstance = null;
         }
 
-        // Detener escaneo
+        if (currentBundle != null)
+        {
+            currentBundle.Unload(true);
+            currentBundle = null;
+        }
+    }
+
+    MetaDatos datos;
+    public void OnNewSearchResult(CloudRecoBehaviour.CloudRecoSearchResult cloudRecoSearchResult)
+    {
+        datos = MetaDatos.CreateFromJSON(cloudRecoSearchResult.MetaData);
+        if (!GameController.controller.IsScanned(datos.nombre))
+        {
+            if (datos != null)
+            {
+                // debug = datos.nombre+": Descargando figura desde URL...";
+                StartCoroutine(GetAssetBundle(datos.URL));
+
+                mTargetMetadata = datos.nombre;
+                  GameController.controller.Scan(datos.nombre);
+            }
+            else
+            {
+                debug = "Metadatos vacíos";
+            }
+
+        }
         mCloudRecoBehaviour.enabled = false;
 
-        // Activar imagen detectada
         if (ImageTargetTemplate)
         {
             mCloudRecoBehaviour.EnableObservers(cloudRecoSearchResult, ImageTargetTemplate.gameObject);
         }
+
     }
 
-     GUIStyle style = new GUIStyle();
 
     void OnGUI()
     {
-        style.alignment = TextAnchor.MiddleCenter;
-        style.fontSize = 40;
         // Display current 'scanning' status
         GUI.Box(new Rect(100, 100, 600, 100), mIsScanning ? "Scanning" : "Not scanning");
         // Display metadata of latest detected cloud-target
@@ -155,10 +202,12 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
         {
             if (GUI.Button(new Rect(100, 500, 600, 100), "Restart Scanning"))
             {
-                // Reset Behaviour
+                ClearSpawnedObjects();
+
                 mCloudRecoBehaviour.enabled = true;
                 mTargetMetadata = "";
                 debug = "";
+                mIsScanning = true;
                 generarNuevoTarget();
             }
         }

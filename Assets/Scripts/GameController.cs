@@ -5,31 +5,60 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
-    public TextMeshProUGUI txtScore;
-    public TextMeshProUGUI txtLives;
-    public TextMeshProUGUI txtTargetName;
+    public static GameController controller;
+    public TextMeshProUGUI[] txtHints;
+    public TextMeshProUGUI txtHint1;
+    public TextMeshProUGUI txtHint2;
+    public TextMeshProUGUI txtHint3;
+    public TextMeshProUGUI txtHint4;
+    public TextMeshProUGUI txtFinalHint;
 
-    private List<string> opcionesBuscar = new List<string>()
+    Dictionary <string, bool> targetsScanned = new Dictionary<string, bool>();
+    string[] keys =
     {
-        "balon",
-        "bici"
+        "Brújula Noche Estrellada",
+        "Mapa Aquelarre",
+        "Llave Fragua",
+        "Cofre Entierro"
+        // "Afrodita Saturno",
     };
+
+    string[] originalHints = new string[4];
 
     private int score = 0;
     private int lives = 3;
     private string targetRequired;
 
+    void Awake()
+    {
+        if (controller == null)
+            controller = this;
+        else
+            Destroy(gameObject);
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GenerarNuevoTarget();
-        ActualizarUI();
+        // GenerarNuevoTarget();
+        // ActualizarUI();
+        // txtHint1.text = "<s>"+txtHint1.text+"</s>";
+        foreach(string s in keys)
+        {
+            targetsScanned.Add(s,false);
+        }
+        int ite = 0;
+        foreach(TextMeshProUGUI tmpu in txtHints)
+        {
+            originalHints[ite] = tmpu.text;
+            ite++;
+        }
     }
 
     void ActualizarUI(){
-        txtTargetName.text = "Busca: "+targetRequired;
+        // txtTargetName.text = "Busca: "+targetRequired;
         // txtScore.text = "Puntos: "+score;
-        txtLives.text = "Vidas: "+lives;
+        // txtLives.text = "Vidas: "+lives;
     }
 
     // Update is called once per frame
@@ -38,9 +67,29 @@ public class GameController : MonoBehaviour
         
     }
 
+    public bool IsScanned(string key)
+    {
+        return targetsScanned[key];
+    }
+
+    public void Scan(string key)
+    {
+        targetsScanned[key] = true;
+
+        for (int i = 0; i < keys.Length; i++)
+        {
+            string k = keys[i];
+            if (targetsScanned[k])
+            {
+                // txtHints[i].text = "<s>" + originalHints[i] + "</s>";
+                txtHints[i].text = "AAAAAAAAAAAAAAAAAAAAAAAAA";
+            }
+        }
+    }
+
     public void OnTargetFound(string targetReconocido)
     {
-        txtScore.text = targetReconocido;
+        // txtScore.text = targetReconocido;
         if (targetReconocido == targetRequired)
         {
             //Acierto
@@ -61,14 +110,14 @@ public class GameController : MonoBehaviour
     void GenerarNuevoTarget()
     {
         //Cambiar esto por random
-        int posAleatoria = Random.Range(0, opcionesBuscar.Count);
-        targetRequired = opcionesBuscar[posAleatoria];
+        // int posAleatoria = Random.Range(0, opcionesBuscar.Count);
+        // targetRequired = opcionesBuscar[posAleatoria];
         ActualizarUI();
     }
 
     void GameOver()
     {
-        txtScore.text = "Perdiste";
+        // txtScore.text = "Perdiste";
         ActualizarUI();
     }
 }
