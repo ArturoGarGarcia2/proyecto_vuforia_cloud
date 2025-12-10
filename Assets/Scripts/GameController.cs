@@ -24,7 +24,16 @@ public class GameController : MonoBehaviour
         // "Afrodita Saturno",
     };
 
-    string[] originalHints = new string[4];
+    string[] originalHints = {
+        @"- En el cielo siempre están para guiarnos,
+brillantes y copiosas, guardan algo para nuestras manos.",
+        @"- Todo el mundo las teme, niños y adultos por igual,
+pero con el pago justo el camino pueden mostrar.",
+        @"- Ancestral maestro de la forja y el metal
+su trabajo y esfuerzo cuida al recelar.",
+        @"- Secretos, se revelan o se llevan a la tumba,
+este ahora enterró consigo lo que acaba esta trifulca."
+    };
 
     private int score = 0;
     private int lives = 3;
@@ -77,13 +86,13 @@ public class GameController : MonoBehaviour
     public void Scan(string key)
     {
         key = key.Trim().ToLower();
-        txtDebug.text = keys.Length+"";
 
         for (int i = 0; i < keys.Length; i++)
         {
-            // txtDebug.text = txtDebug.text+keys[i]+"\n";
+            txtDebug.text += keys[i]+"\n";
             if (keys[i].ToLower() == key)
             {
+                txtDebug.text += "\n\n SE HA ENCONTRADO "+originalHints[i];
                 targetsScanned[keys[i]] = true;
                 txtHints[i].text = "<s>" + originalHints[i] + "</s>";
             }
