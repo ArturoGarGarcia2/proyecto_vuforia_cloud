@@ -22,7 +22,7 @@ public class MetaDatos
 public class SimpleCloudRecoEventHandler : MonoBehaviour
 {
     CloudRecoBehaviour mCloudRecoBehaviour;
-    bool mIsScanning = false;
+    bool mIsScanning = true;
     string mTargetMetadata = "";
 
     string[] images = { "arbol", "balon", "bici" };
@@ -162,35 +162,28 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
     public void OnNewSearchResult(CloudRecoBehaviour.CloudRecoSearchResult cloudRecoSearchResult)
     {
         datos = MetaDatos.CreateFromJSON(cloudRecoSearchResult.MetaData);
+
+        if (datos == null) return;
+
         if (!GameController.controller.IsScanned(datos.nombre))
         {
-            debug = "No está escaneado";
-            if (datos != null)
-            {
-                debug += "\nHay datillos";
-                // debug = datos.nombre+": Descargando figura desde URL...";
-                StartCoroutine(GetAssetBundle(datos.URL));
-
-                mTargetMetadata = datos.nombre;
-                GameController.controller.Scan(datos.nombre);
-            }
-            else
-            {
-                debug = "Metadatos vacíos";
-            }
-
+            StartCoroutine(GetAssetBundle(datos.URL));
+            GameController.controller.Scan(datos.nombre);
         }
         else
         {
-            debug = "Wscaneau";
+            debug = "Imagen ya escaneada";
         }
+
         mCloudRecoBehaviour.enabled = false;
 
         if (ImageTargetTemplate)
         {
-            mCloudRecoBehaviour.EnableObservers(cloudRecoSearchResult, ImageTargetTemplate.gameObject);
+            mCloudRecoBehaviour.EnableObservers(
+                cloudRecoSearchResult,
+                ImageTargetTemplate.gameObject
+            );
         }
-
     }
 
 

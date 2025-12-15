@@ -20,7 +20,7 @@ public class ImageTargetHandler : MonoBehaviour
     private void OnTargetStatusChanged(ObserverBehaviour behaviour, TargetStatus status)
     {
         if(status.Status == Status.TRACKED)
-            gameController.OnTargetFound(behaviour.TargetName);
+            gameController.Scan(behaviour.TargetName);
     }
 
     // Update is called once per frame
