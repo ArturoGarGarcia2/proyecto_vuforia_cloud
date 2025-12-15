@@ -50,7 +50,7 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
         mCloudRecoBehaviour.RegisterOnUpdateErrorEventHandler(OnUpdateError);
         mCloudRecoBehaviour.RegisterOnStateChangedEventHandler(OnStateChanged);
         mCloudRecoBehaviour.RegisterOnNewSearchResultEventHandler(OnNewSearchResult);
-        generarNuevoTarget();
+        // generarNuevoTarget();
     }
     //Unregister cloud reco callbacks when the handler is destroyed
     void OnDestroy()
@@ -207,7 +207,7 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
                 mTargetMetadata = "";
                 debug = "";
                 mIsScanning = true;
-                generarNuevoTarget();
+                // generarNuevoTarget();
             }
         }
     }
