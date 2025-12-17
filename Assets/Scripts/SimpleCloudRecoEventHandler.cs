@@ -25,21 +25,13 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
     bool mIsScanning = true;
     string mTargetMetadata = "";
 
-    string[] images = { "arbol", "balon", "bici" };
     int targetNum;
     string target;
+    private ImageTargetBehaviour currentTarget;
 
-    public GameObject[] gameObjects;
 
     public ImageTargetBehaviour ImageTargetTemplate;
     public Transform modelPivot;
-
-
-    private void generarNuevoTarget()
-    {
-        targetNum = Random.Range(0, images.Length + 1);
-        target = images[targetNum];
-    }
 
     // Register cloud reco callbacks
     void Awake()
@@ -125,9 +117,11 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(www.error);
+            debug = "GetAssetBundle() ERROR";
         }
         else
         {
+            debug = "GetAssetBundle() Todo bien";
             currentBundle = DownloadHandlerAssetBundle.GetContent(www);
             string[] allAssetNames = currentBundle.GetAllAssetNames();
             string gameObjectName = Path.GetFileNameWithoutExtension(allAssetNames[0]);
@@ -140,6 +134,7 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
             // Ajustes locales
             currentInstance.transform.localPosition = new Vector3(0.05f, 0f, 0.05f);
             currentInstance.transform.localRotation = Quaternion.Euler(0f, 0f, -180f);
+            currentInstance.transform.localScale = Vector3.one * .5f;
         }
     }
 
@@ -162,29 +157,53 @@ public class SimpleCloudRecoEventHandler : MonoBehaviour
     public void OnNewSearchResult(CloudRecoBehaviour.CloudRecoSearchResult cloudRecoSearchResult)
     {
         datos = MetaDatos.CreateFromJSON(cloudRecoSearchResult.MetaData);
+        debug = "METADATOS: "+datos.nombre;
 
-        if (datos == null) return;
+        StartCoroutine(GetAssetBundle(datos.URL));
+        GameController.controller.Scan(datos.nombre);
 
-        if (!GameController.controller.IsScanned(datos.nombre))
-        {
-            StartCoroutine(GetAssetBundle(datos.URL));
-            GameController.controller.Scan(datos.nombre);
-        }
-        else
-        {
-            debug = "Imagen ya escaneada";
-        }
-
+        // Detener escaneo
         mCloudRecoBehaviour.enabled = false;
 
-        if (ImageTargetTemplate)
-        {
-            mCloudRecoBehaviour.EnableObservers(
-                cloudRecoSearchResult,
-                ImageTargetTemplate.gameObject
-            );
-        }
+        // ELIMINAR TARGET ANTERIOR SI EXISTE
+        if (currentTarget != null)
+            Destroy(currentTarget.gameObject);
+
+        // CREAR UN NUEVO IMAGE TARGET (API NUEVA VUFORIA 10)
+        currentTarget = VuforiaBehaviour.Instance.ObserverFactory.CreateImageTarget(
+            cloudRecoSearchResult.MetaData,        // ancho de la imagen (metadata de Vuforia Cloud)
+            cloudRecoSearchResult.TargetName       // nombre del target
+        );
+
+        currentTarget.gameObject.name = cloudRecoSearchResult.TargetName;
+
     }
+    // public void OnNewSearchResult(CloudRecoBehaviour.CloudRecoSearchResult cloudRecoSearchResult)
+    // {
+    //     datos = MetaDatos.CreateFromJSON(cloudRecoSearchResult.MetaData);
+
+    //     if (datos == null) return;
+
+    //     if (!GameController.controller.IsScanned(datos.nombre))
+    //     {
+    //         StartCoroutine(GetAssetBundle(datos.URL));
+    //         GameController.controller.Scan(datos.nombre);
+    //     }
+    //     else
+    //     {
+    //         debug = "Imagen ya escaneada";
+    //     }
+
+    //     mCloudRecoBehaviour.enabled = false;
+
+    //     if (ImageTargetTemplate)
+    //     {
+    //         mCloudRecoBehaviour.EnableObservers(
+    //             cloudRecoSearchResult,
+    //             ImageTargetTemplate.gameObject
+    //         );
+    //     }
+    // }
 
 
     void OnGUI()
